@@ -41,8 +41,8 @@ constexpr char kImuTopic[] = "imu";
 constexpr char kOdometryTopic[] = "odom";
 constexpr char kFinishTrajectoryServiceName[] = "finish_trajectory";
 constexpr char kOccupancyGridTopic[] = "map";
-constexpr char kScanMatchedPointCloudTopic[] = "scan_matched_points2";
-constexpr char kSubmapListTopic[] = "submap_list";
+//constexpr char kScanMatchedPointCloudTopic[] = "scan_matched_points2";
+//constexpr char kSubmapListTopic[] = "submap_list";
 constexpr char kSubmapQueryServiceName[] = "submap_query";
 
 // Wires up ROS topics to SLAM.
@@ -64,7 +64,7 @@ class Node {
       cartographer_ros_msgs::SubmapQuery::Request& request,
       cartographer_ros_msgs::SubmapQuery::Response& response);
 
-  void PublishSubmapList(const ::ros::WallTimerEvent& timer_event);
+//  void PublishSubmapList(const ::ros::WallTimerEvent& timer_event);
   void PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event);
   void SpinOccupancyGridThreadForever();
 
@@ -78,9 +78,9 @@ class Node {
   std::unordered_set<string> expected_sensor_ids_;
 
   ::ros::NodeHandle node_handle_;
-  ::ros::Publisher submap_list_publisher_;
+//  ::ros::Publisher submap_list_publisher_;
   ::ros::ServiceServer submap_query_server_;
-  ::ros::Publisher scan_matched_point_cloud_publisher_;
+//  ::ros::Publisher scan_matched_point_cloud_publisher_;
   cartographer::common::Time last_scan_matched_point_cloud_time_ =
       cartographer::common::Time::min();
 

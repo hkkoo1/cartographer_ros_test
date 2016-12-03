@@ -4,6 +4,13 @@ This is a cartographer ros performance test, the codes are fetched from https://
 ###Test Branch###
 I will not modify any codes from master branch, while I will do some test, even modify the codes with other branches
 
+#### maseter branch ####
+the origin one
+
+#### odom_dev branch ####
+the purpose: use odom data + scan data = generate 2d occupancy map
+I will use odom data (similar with gmapping with odom data inside tf) and 2d scan data (max range = 10 m) to generate 2d map, here I use: roslaunch cartographer_ros demo_backpack_2d.launch bag_filename:=[bagfile name], you can modify [backpack_2d.lua] with your own setup 
+
 ###How to install###
 there are 3 main modules in cartographer_ros_test:
 ```

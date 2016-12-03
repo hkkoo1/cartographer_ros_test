@@ -62,9 +62,9 @@ Node::~Node() {
 
 void Node::Initialize() {
   carto::common::MutexLocker lock(&mutex_);
-  submap_list_publisher_ =
-      node_handle_.advertise<::cartographer_ros_msgs::SubmapList>(
-          kSubmapListTopic, kLatestOnlyPublisherQueueSize);
+//  submap_list_publisher_ =
+//      node_handle_.advertise<::cartographer_ros_msgs::SubmapList>(
+//          kSubmapListTopic, kLatestOnlyPublisherQueueSize);
   submap_query_server_ = node_handle_.advertiseService(
       kSubmapQueryServiceName, &Node::HandleSubmapQuery, this);
 
@@ -77,13 +77,13 @@ void Node::Initialize() {
         std::thread(&Node::SpinOccupancyGridThreadForever, this);
   }
 
-  scan_matched_point_cloud_publisher_ =
-      node_handle_.advertise<sensor_msgs::PointCloud2>(
-          kScanMatchedPointCloudTopic, kLatestOnlyPublisherQueueSize);
+//  scan_matched_point_cloud_publisher_ =
+//      node_handle_.advertise<sensor_msgs::PointCloud2>(
+//          kScanMatchedPointCloudTopic, kLatestOnlyPublisherQueueSize);
 
-  wall_timers_.push_back(node_handle_.createWallTimer(
-      ::ros::WallDuration(options_.submap_publish_period_sec),
-      &Node::PublishSubmapList, this));
+//  wall_timers_.push_back(node_handle_.createWallTimer(
+//      ::ros::WallDuration(options_.submap_publish_period_sec),
+//      &Node::PublishSubmapList, this));
   wall_timers_.push_back(node_handle_.createWallTimer(
       ::ros::WallDuration(options_.pose_publish_period_sec),
       &Node::PublishTrajectoryStates, this));
@@ -100,10 +100,10 @@ bool Node::HandleSubmapQuery(
   return map_builder_bridge_.HandleSubmapQuery(request, response);
 }
 
-void Node::PublishSubmapList(const ::ros::WallTimerEvent& unused_timer_event) {
-  carto::common::MutexLocker lock(&mutex_);
-  submap_list_publisher_.publish(map_builder_bridge_.GetSubmapList());
-}
+//void Node::PublishSubmapList(const ::ros::WallTimerEvent& unused_timer_event) {
+//  carto::common::MutexLocker lock(&mutex_);
+//  submap_list_publisher_.publish(map_builder_bridge_.GetSubmapList());
+//}
 
 void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
   carto::common::MutexLocker lock(&mutex_);
@@ -119,20 +119,20 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
 
     // We only publish a point cloud if it has changed. It is not needed at high
     // frequency, and republishing it would be computationally wasteful.
-    if (trajectory_state.pose_estimate.time !=
-        last_scan_matched_point_cloud_time_) {
-      scan_matched_point_cloud_publisher_.publish(ToPointCloud2Message(
-          carto::common::ToUniversal(trajectory_state.pose_estimate.time),
-          options_.tracking_frame,
-          carto::sensor::TransformPointCloud(
-              trajectory_state.pose_estimate.point_cloud,
-              tracking_to_local.inverse().cast<float>())));
-      last_scan_matched_point_cloud_time_ = trajectory_state.pose_estimate.time;
-    } else {
+//    if (trajectory_state.pose_estimate.time !=
+//        last_scan_matched_point_cloud_time_) {
+//      scan_matched_point_cloud_publisher_.publish(ToPointCloud2Message(
+//          carto::common::ToUniversal(trajectory_state.pose_estimate.time),
+//          options_.tracking_frame,
+//          carto::sensor::TransformPointCloud(
+//              trajectory_state.pose_estimate.point_cloud,
+//              tracking_to_local.inverse().cast<float>())));
+//      last_scan_matched_point_cloud_time_ = trajectory_state.pose_estimate.time;
+//    } else {
       // If we do not publish a new point cloud, we still allow time of the
       // published poses to advance.
       stamped_transform.header.stamp = ros::Time::now();
-    }
+//    }
 
     if (trajectory_state.published_to_tracking != nullptr) {
       if (options_.provide_odom_frame) {
@@ -166,7 +166,7 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
 
 void Node::SpinOccupancyGridThreadForever() {
   for (;;) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(15000));
     {
       carto::common::MutexLocker lock(&mutex_);
       if (terminating_) {
